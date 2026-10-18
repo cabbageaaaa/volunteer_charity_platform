@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+
+{% block title %}Charity Dashboard - Volunteer & Charity Platform{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Charity Dashboard</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Organization Profile</h5>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">{{ profile.name }}</h5>
+                <p class="card-text">
+                    {% if profile.description %}
+                        {{ profile.description }}
+                    {% else %}
+                        <em>No description provided</em>
+                    {% endif %}
+                </p>
+                <hr>
+                <div class="mb-2">
+                    <strong>Website:</strong>
+                    {% if profile.website %}
+                        <a href="{{ profile.website }}" target="_blank">{{ profile.website }}</a>
+                    {% else %}
+                        <em>Not provided</em>
+                    {% endif %}
+                </div>
+                <div class="mb-2">
+                    <strong>Phone:</strong>
+                    {% if profile.phone %}
+                        {{ profile.phone }}
+                    {% else %}
+                        <em>Not provided</em>
+                    {% endif %}
+                </div>
+                <div class="mb-2">
+                    <strong>Address:</strong>
+                    {% if profile.address %}
+                        {{ profile.address }}
+                    {% else %}
+                        <em>Not provided</em>
+                    {% endif %}
+                </div>
+                <div class="mt-3">
+                    <a href="{{ url_for('charity_edit_profile') }}" class="btn btn-primary">Edit Profile</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Statistics</h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-6 mb-3">
+                        <h2 class="display-5">{{ total_events }}</h2>
+                        <p class="text-muted">Total Events</p>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <h2 class="display-5">{{ total_volunteers }}</h2>
+                        <p class="text-muted">Total Volunteers</p>
+                    </div>
+                </div>
+                <div class="d-grid mt-3">
+                    <a href="{{ url_for('charity_create_event') }}" class="btn btn-success">Create New Event</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Upcoming Events</h5>
+                    <a href="{{ url_for('charity_manage_events') }}" class="btn btn-sm btn-primary">Manage All Events</a>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if upcoming_events %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Event Name</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Signups</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for event in upcoming_events %}
+                                    <tr>
+                                        <td>{{ event.name }}</td>
+                                        <td>
+                                            {{ event.start_datetime.strftime('%d %b %Y') }}<br>
+                                            <small class="text-muted">{{ event.start_datetime.strftime('%I:%M %p') }}</small>
+                                        </td>
+                                        <td>
+                                            <span class="badge {% if event.status == 'approved' %}bg-success{% elif event.status == 'pending' %}bg-warning{% else %}bg-secondary{% endif %}">
+                                                {{ event.status|capitalize }}
+                                            </span>
+                                        </td>
+                                        <td>{{ event.signup_count }}</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <a href="{{ url_for('charity_edit_event', event_id=event.id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                                                <a href="{{ url_for('charity_event_volunteers', event_id=event.id) }}" class="btn btn-sm btn-outline-secondary">Volunteers</a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">
+                        You don't have any upcoming events. <a href="{{ url_for('charity_create_event') }}">Create an event</a> to get started.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <div class="d-grid">
+                            <a href="{{ url_for('charity_create_event') }}" class="btn btn-primary">Create Event</a>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="d-grid">
+                            <a href="{{ url_for('charity_manage_events') }}" class="btn btn-info">Manage Events</a>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="d-grid">
+                            <a href="#" class="btn btn-secondary">View Reports</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

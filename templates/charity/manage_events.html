@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Events - Volunteer & Charity Platform{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Manage Events</h1>
+
+<div class="d-flex justify-content-end mb-3">
+    <a href="{{ url_for('charity_create_event') }}" class="btn btn-success">Create New Event</a>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">All Events</h5>
+    </div>
+    <div class="card-body">
+        {% if events %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Event Name</th>
+                            <th>Date & Time</th>
+                            <th>Location</th>
+                            <th>Status</th>
+                            <th>Signups</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for event in events %}
+                            <tr>
+                                <td>{{ event.name }}</td>
+                                <td>
+                                    {{ event.start_datetime.strftime('%d %b %Y') }}<br>
+                                    <small class="text-muted">
+                                        {{ event.start_datetime.strftime('%I:%M %p') }} - {{ event.end_datetime.strftime('%I:%M %p') }}
+                                    </small>
+                                </td>
+                                <td>{{ event.location }}</td>
+                                <td>
+                                    <span class="badge {% if event.status == 'approved' %}bg-success{% elif event.status == 'pending' %}bg-warning{% elif event.status == 'completed' %}bg-info{% else %}bg-danger{% endif %}">
+                                        {{ event.status|capitalize }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {{ event.signup_count }}
+                                    {% if event.max_volunteers %}
+                                        / {{ event.max_volunteers }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a href="{{ url_for('charity_edit_event', event_id=event.id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                                        <a href="{{ url_for('charity_event_volunteers', event_id=event.id) }}" class="btn btn-sm btn-outline-secondary">Volunteers</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                You haven't created any events yet. <a href="{{ url_for('charity_create_event') }}">Create your first event</a> to get started.
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card mt-4">
+    <div class="card-header">
+        <h5 class="mb-0">Event Status Guide</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-3 mb-3">
+                <div class="d-flex align-items-center">
+                    <span class="badge bg-warning me-2">Pending</span>
+                    <span>Awaiting admin approval</span>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="d-flex align-items-center">
+                    <span class="badge bg-success me-2">Approved</span>
+                    <span>Visible to volunteers</span>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="d-flex align-items-center">
+                    <span class="badge bg-info me-2">Completed</span>
+                    <span>Event has ended</span>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="d-flex align-items-center">
+                    <span class="badge bg-danger me-2">Cancelled</span>
+                    <span>Event was cancelled</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

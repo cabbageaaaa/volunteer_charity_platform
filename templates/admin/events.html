@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block title %}Event Management - Admin Dashboard{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Event Management</h1>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">All Events</h5>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Event Name</th>
+                        <th>Charity</th>
+                        <th>Location</th>
+                        <th>Date & Time</th>
+                        <th>Status</th>
+                        <th>Created</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for event in events %}
+                    <tr>
+                        <td>{{ event.id }}</td>
+                        <td>{{ event.name }}</td>
+                        <td>{{ event.charity_name }}</td>
+                        <td>{{ event.location }}</td>
+                        <td>
+                            {{ event.start_datetime.strftime('%d %b %Y') }}<br>
+                            {{ event.start_datetime.strftime('%I:%M %p') }} - {{ event.end_datetime.strftime('%I:%M %p') }}
+                        </td>
+                        <td>
+                            <span class="badge {% if event.status == 'approved' %}bg-success{% elif event.status == 'pending' %}bg-warning{% elif event.status == 'completed' %}bg-info{% else %}bg-danger{% endif %}">
+                                {{ event.status|capitalize }}
+                            </span>
+                        </td>
+                        <td>{{ event.created_at.strftime('%d %b %Y') }}</td>
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                    Actions
+                                </button>
+                                <ul class="dropdown-menu">
+                                    {% if event.status != 'approved' %}
+                                    <li>
+                                        <form action="{{ url_for('update_event_status', event_id=event.id) }}" method="post">
+                                            <input type="hidden" name="status" value="approved">
+                                            <button type="submit" class="dropdown-item">Approve</button>
+                                        </form>
+                                    </li>
+                                    {% endif %}
+                                    
+                                    {% if event.status != 'cancelled' %}
+                                    <li>
+                                        <form action="{{ url_for('update_event_status', event_id=event.id) }}" method="post">
+                                            <input type="hidden" name="status" value="cancelled">
+                                            <button type="submit" class="dropdown-item">Cancel</button>
+                                        </form>
+                                    </li>
+                                    {% endif %}
+                                    
+                                    {% if event.end_datetime < now and event.status != 'completed' %}
+                                    <li>
+                                        <form action="{{ url_for('update_event_status', event_id=event.id) }}" method="post">
+                                            <input type="hidden" name="status" value="completed">
+                                            <button type="submit" class="dropdown-item">Completed</button>
+                                        </form>
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Set the current date/time for comparison in the template
+    var now = new Date();
+</script>
+{% endblock %}

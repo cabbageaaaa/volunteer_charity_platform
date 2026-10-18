@@ -1,0 +1,174 @@
+
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+
+
+.navbar-collapse {
+    display: none;
+}
+
+.navbar-collapse.show {
+    display: block;
+}
+
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    min-width: 10rem;
+    padding: 0.5rem 0;
+    margin: 0.125rem 0 0;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: 0.25rem;
+    z-index: 1000;
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+
+
+.tab-content > .tab-pane {
+    display: none;
+}
+
+.tab-content > .tab-pane.show.active {
+    display: block;
+}
+
+.navbar {
+    background-color: #3f51b5;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.navbar-brand, .navbar-nav .nav-link {
+    color: white;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #e0e0e0;
+}
+
+
+.card {
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+/* Removed hover effect */
+
+.btn-primary {
+    background-color: #3f51b5;
+    border-color: #3f51b5;
+}
+
+.btn-primary:hover {
+    background-color: #303f9f;
+    border-color: #303f9f;
+}
+
+.footer {
+    background-color: #343a40;
+    color: white;
+    padding: 20px 0;
+    margin-top: 50px;
+}
+
+.event-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.event-card .card-body {
+    flex: 1;
+}
+
+.flash-messages {
+    position: fixed;
+    top: 70px;
+    right: 20px;
+    z-index: 1000;
+    max-width: 300px;
+}
+
+/* Dashboard styles */
+.stats-card {
+    text-align: center;
+    padding: 20px;
+}
+
+.stats-card .number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #3f51b5;
+}
+
+.stats-card .label {
+    font-size: 1rem;
+    color: #6c757d;
+}
+
+
+.form-control:focus {
+    border-color: #3f51b5;
+    box-shadow: 0 0 0 0.25rem rgba(63, 81, 181, 0.25);
+}
+
+
+.table-hover tbody tr:hover {
+    background-color: rgba(63, 81, 181, 0.05);
+}
+
+
+.event-details-header {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.event-details-header h2 {
+    margin-bottom: 10px;
+    color: #3f51b5;
+}
+
+
+.profile-header {
+    background-color: #3f51b5;
+    color: white;
+    padding: 30px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.profile-header h2 {
+    margin-bottom: 10px;
+}
+
+.profile-stats {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+.profile-stat {
+    text-align: center;
+}
+
+.profile-stat .number {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.profile-stat .label {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}

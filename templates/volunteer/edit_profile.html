@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Profile - Volunteer & Charity Platform{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">Edit Profile</h1>
+    
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">Your Information</h5>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                <div class="mb-3">
+                    <label for="first_name" class="form-label">First Name</label>
+                    <input type="text" class="form-control" id="first_name" name="first_name" value="{{ profile.first_name }}" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="last_name" class="form-label">Last Name</label>
+                    <input type="text" class="form-control" id="last_name" name="last_name" value="{{ profile.last_name }}" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="bio" class="form-label">Bio</label>
+                    <textarea class="form-control" id="bio" name="bio" rows="4">{{ profile.bio }}</textarea>
+                    <div class="form-text">Tell us about yourself, your interests, and why you volunteer.</div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="skills" class="form-label">Skills</label>
+                    <textarea class="form-control" id="skills" name="skills" rows="3">{{ profile.skills }}</textarea>
+                    <div class="form-text">List your skills, separated by commas (e.g., "teaching, cooking, web design").</div>
+                </div>
+                
+                <div class="d-flex justify-content-between">
+                    <a href="{{ url_for('volunteer_dashboard') }}" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

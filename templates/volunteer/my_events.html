@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title %}My Events - Volunteer & Charity Platform{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">My Events</h1>
+
+<ul class="nav nav-tabs mb-4" id="myEventsTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="upcoming-tab" data-bs-toggle="tab" data-bs-target="#upcoming" type="button" role="tab">Upcoming Events</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="past-tab" data-bs-toggle="tab" data-bs-target="#past" type="button" role="tab">Past Events</button>
+    </li>
+</ul>
+
+<div class="tab-content" id="myEventsTabContent">
+    <!-- Upcoming Events Tab -->
+    <div class="tab-pane fade show active" id="upcoming" role="tabpanel">
+        {% if upcoming_events %}
+            <div class="row">
+                {% for event in upcoming_events %}
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">{{ event.name }}</h5>
+                                    <span class="badge {% if event.registration_status == 'approved' %}bg-success{% elif event.registration_status == 'pending' %}bg-warning{% else %}bg-secondary{% endif %}">
+                                        {{ event.registration_status|capitalize }}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <h6 class="card-subtitle mb-2 text-muted">{{ event.charity_name }}</h6>
+                                <p class="card-text">
+                                    <strong>Date:</strong> {{ event.start_datetime.strftime('%A, %d %B %Y') }}<br>
+                                    <strong>Time:</strong> {{ event.start_datetime.strftime('%I:%M %p') }} - {{ event.end_datetime.strftime('%I:%M %p') }}<br>
+                                    <strong>Location:</strong> {{ event.location }}
+                                </p>
+                                <p class="card-text">{{ event.description[:100] }}{% if event.description|length > 100 %}...{% endif %}</p>
+                            </div>
+                            <div class="card-footer bg-white">
+                                <a href="{{ url_for('volunteer_event_details', event_id=event.id) }}" class="btn btn-primary">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                You don't have any upcoming events. <a href="{{ url_for('volunteer_events') }}">Browse events</a> to find volunteer opportunities.
+            </div>
+        {% endif %}
+    </div>
+    
+    <!-- Past Events Tab -->
+    <div class="tab-pane fade" id="past" role="tabpanel">
+        {% if past_events %}
+            <div class="row">
+                {% for event in past_events %}
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">{{ event.name }}</h5>
+                                    <span class="badge {% if event.registration_status == 'completed' %}bg-success{% elif event.registration_status == 'approved' %}bg-info{% elif event.registration_status == 'rejected' %}bg-danger{% else %}bg-secondary{% endif %}">
+                                        {{ event.registration_status|capitalize }}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <h6 class="card-subtitle mb-2 text-muted">{{ event.charity_name }}</h6>
+                                <p class="card-text">
+                                    <strong>Date:</strong> {{ event.start_datetime.strftime('%A, %d %B %Y') }}<br>
+                                    <strong>Time:</strong> {{ event.start_datetime.strftime('%I:%M %p') }} - {{ event.end_datetime.strftime('%I:%M %p') }}<br>
+                                    <strong>Location:</strong> {{ event.location }}
+                                </p>
+                                <p class="card-text">{{ event.description[:100] }}{% if event.description|length > 100 %}...{% endif %}</p>
+                            </div>
+                            <div class="card-footer bg-white">
+                                <a href="{{ url_for('volunteer_event_details', event_id=event.id) }}" class="btn btn-primary">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                You don't have any past events.
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Organization Profile - Volunteer & Charity Platform{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Edit Organization Profile</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Organization Name</label>
+                            <input type="text" class="form-control" id="name" name="name" value="{{ charity.name }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="email" name="email" value="{{ charity.email }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Organization Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="4" required>{{ charity.description }}</textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="address" class="form-label">Address</label>
+                            <input type="text" class="form-control" id="address" name="address" value="{{ charity.address }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Phone Number</label>
+                            <input type="text" class="form-control" id="phone" name="phone" value="{{ charity.phone }}" required>
+                        </div>
+                        <!-- 网站URL字段已移除 -->
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Update Profile</button>
+                            <a href="{{ url_for('charity_dashboard') }}" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

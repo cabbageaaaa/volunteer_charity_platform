@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Event - Volunteer & Charity Platform{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Edit Event</h1>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">Event Details</h5>
+    </div>
+    <div class="card-body">
+        <form method="post" action="{{ url_for('charity_edit_event', event_id=event.id) }}">
+            <div class="mb-3">
+                <label for="name" class="form-label">Event Name</label>
+                <input type="text" class="form-control" id="name" name="name" value="{{ event.name }}" required>
+            </div>
+            
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" name="description" rows="5" required>{{ event.description }}</textarea>
+                <div class="form-text">Provide a detailed description of the event, including what volunteers will be doing.</div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="location" class="form-label">Location</label>
+                <input type="text" class="form-control" id="location" name="location" value="{{ event.location }}" required>
+                <div class="form-text">Provide the full address or location details.</div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="start_datetime" class="form-label">Start Date & Time</label>
+                    <input type="datetime-local" class="form-control" id="start_datetime" name="start_datetime" value="{{ event.start_datetime.strftime('%Y-%m-%dT%H:%M') }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="end_datetime" class="form-label">End Date & Time</label>
+                    <input type="datetime-local" class="form-control" id="end_datetime" name="end_datetime" value="{{ event.end_datetime.strftime('%Y-%m-%dT%H:%M') }}" required>
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="required_skills" class="form-label">Required Skills</label>
+                <textarea class="form-control" id="required_skills" name="required_skills" rows="3">{{ event.required_skills }}</textarea>
+                <div class="form-text">List any specific skills or qualifications needed for this event. Leave blank if none required.</div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="max_volunteers" class="form-label">Maximum Number of Volunteers</label>
+                <input type="number" class="form-control" id="max_volunteers" name="max_volunteers" min="1" value="{{ event.max_volunteers }}">
+                <div class="form-text">Leave blank if there is no limit.</div>
+            </div>
+            
+            <div class="alert alert-warning">
+                <strong>Note:</strong> Editing this event will require re-approval by an administrator before it becomes visible to volunteers again.
+            </div>
+            
+            <div class="d-flex justify-content-between">
+                <a href="{{ url_for('charity_manage_events') }}" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary">Update Event</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        // Ensure end time is after start time
+        $('#start_datetime').on('change', function() {
+            $('#end_datetime').attr('min', $(this).val());
+            if ($('#end_datetime').val() < $(this).val()) {
+                $('#end_datetime').val($(this).val());
+            }
+        });
+    });
+</script>
+{% endblock %}

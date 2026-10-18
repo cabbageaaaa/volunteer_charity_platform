@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block title %}Volunteer Dashboard - Volunteer & Charity Platform{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Volunteer Dashboard</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Profile</h5>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">{{ profile.first_name }} {{ profile.last_name }}</h5>
+                <p class="card-text">
+                    {% if profile.bio %}
+                        {{ profile.bio }}
+                    {% else %}
+                        <em>No bio provided</em>
+                    {% endif %}
+                </p>
+                <hr>
+                <div class="mb-2">
+                    <strong>Hours Contributed:</strong> {{ profile.hours_contributed }}
+                </div>
+                <div class="mb-2">
+                    <strong>Skills:</strong>
+                    {% if profile.skills %}
+                        {{ profile.skills }}
+                    {% else %}
+                        <em>No skills listed</em>
+                    {% endif %}
+                </div>
+                <div class="mt-3">
+                    <a href="{{ url_for('volunteer_edit_profile') }}" class="btn btn-primary">Edit Profile</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Upcoming Events</h5>
+            </div>
+            <div class="card-body">
+                {% if upcoming_events %}
+                    <div class="list-group">
+                        {% for event in upcoming_events %}
+                            <a href="{{ url_for('volunteer_event_details', event_id=event.id) }}" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">{{ event.name }}</h5>
+                                    <small>
+                                        <span class="badge {% if event.registration_status == 'approved' %}bg-success{% elif event.registration_status == 'pending' %}bg-warning{% else %}bg-secondary{% endif %}">
+                                            {{ event.registration_status|capitalize }}
+                                        </span>
+                                    </small>
+                                </div>
+                                <p class="mb-1">{{ event.charity_name }}</p>
+                                <small>
+                                    <strong>Date:</strong> {{ event.start_datetime.strftime('%d %b %Y') }} |
+                                    <strong>Time:</strong> {{ event.start_datetime.strftime('%I:%M %p') }} - {{ event.end_datetime.strftime('%I:%M %p') }} |
+                                    <strong>Location:</strong> {{ event.location }}
+                                </small>
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">
+                        You don't have any upcoming events. <a href="{{ url_for('volunteer_events') }}">Browse events</a> to find volunteer opportunities.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Recent Notifications</h5>
+            </div>
+            <div class="card-body">
+                {% if notifications %}
+                    <div class="list-group">
+                        {% for notification in notifications %}
+                            <div class="list-group-item">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">
+                                        {% if notification.status == 'approved' %}
+                                            Your registration for "{{ notification.event_name }}" has been approved
+                                        {% elif notification.status == 'rejected' %}
+                                            Your registration for "{{ notification.event_name }}" has been rejected
+                                        {% elif notification.status == 'completed' %}
+                                            Your participation in "{{ notification.event_name }}" has been marked as completed
+                                        {% else %}
+                                            You registered for "{{ notification.event_name }}"
+                                        {% endif %}
+                                    </h6>
+                                    <small>{{ notification.registered_at.strftime('%d %b %Y') }}</small>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">No recent notifications.</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

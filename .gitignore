@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyc
+.venv/
+venv/
+
+# PyCharm
+.idea/
+*.iml
+
+# Database & logs
+*.db
+*.sqlite
+*.sqlite3
+*.log
+
+# OS file
+.DS_Store
+Thumbs.db

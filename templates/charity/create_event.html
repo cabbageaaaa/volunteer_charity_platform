@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Event - Volunteer & Charity Platform{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Create New Event</h1>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">Event Details</h5>
+    </div>
+    <div class="card-body">
+        <form method="post" action="{{ url_for('charity_create_event') }}">
+            <div class="mb-3">
+                <label for="name" class="form-label">Event Name</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" name="description" rows="5" required></textarea>
+                <div class="form-text">Provide a detailed description of the event, including what volunteers will be doing.</div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="location" class="form-label">Location</label>
+                <input type="text" class="form-control" id="location" name="location" required>
+                <div class="form-text">Provide the full address or location details.</div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="start_datetime" class="form-label">Start Date & Time</label>
+                    <input type="datetime-local" class="form-control" id="start_datetime" name="start_datetime" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="end_datetime" class="form-label">End Date & Time</label>
+                    <input type="datetime-local" class="form-control" id="end_datetime" name="end_datetime" required>
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="required_skills" class="form-label">Required Skills</label>
+                <textarea class="form-control" id="required_skills" name="required_skills" rows="3"></textarea>
+                <div class="form-text">List any specific skills or qualifications needed for this event. Leave blank if none required.</div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="max_volunteers" class="form-label">Maximum Number of Volunteers</label>
+                <input type="number" class="form-control" id="max_volunteers" name="max_volunteers" min="1">
+                <div class="form-text">Leave blank if there is no limit.</div>
+            </div>
+            
+            <div class="alert alert-info">
+                <strong>Note:</strong> All events must be approved by an administrator before they become visible to volunteers.
+            </div>
+            
+            <div class="d-flex justify-content-between">
+                <a href="{{ url_for('charity_dashboard') }}" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary">Create Event</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        // Set minimum date for datetime inputs to today
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0');
+        var yyyy = today.getFullYear();
+        var hh = String(today.getHours()).padStart(2, '0');
+        var min = String(today.getMinutes()).padStart(2, '0');
+        
+        var todayStr = yyyy + '-' + mm + '-' + dd + 'T' + hh + ':' + min;
+        
+        $('#start_datetime').attr('min', todayStr);
+        $('#end_datetime').attr('min', todayStr);
+        
+        // Ensure end time is after start time
+        $('#start_datetime').on('change', function() {
+            $('#end_datetime').attr('min', $(this).val());
+            if ($('#end_datetime').val() < $(this).val()) {
+                $('#end_datetime').val($(this).val());
+            }
+        });
+    });
+</script>
+{% endblock %}

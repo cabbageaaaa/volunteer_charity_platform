@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+{% block title %}Event Volunteers - Volunteer & Charity Platform{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h2>Volunteers for: {{ event.name }}</h2>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('charity_dashboard') }}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{{ url_for('charity_manage_events') }}">Manage Events</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Event Volunteers</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Event Details</h5>
+        </div>
+    <div class="card-body">
+        <h4>{{ event.name }}</h4>
+        <div class="row mt-3">
+            <div class="col-md-4">
+                <strong>Date:</strong> {{ event.start_datetime.strftime('%A, %d %B %Y') }}
+            </div>
+            <div class="col-md-4">
+                <strong>Time:</strong> {{ event.start_datetime.strftime('%I:%M %p') }} - {{ event.end_datetime.strftime('%I:%M %p') }}
+            </div>
+            <div class="col-md-4">
+                <strong>Location:</strong> {{ event.location }}
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-md-4">
+                <strong>Status:</strong>
+                <span class="badge {% if event.status == 'approved' %}bg-success{% elif event.status == 'pending' %}bg-warning{% elif event.status == 'completed' %}bg-info{% else %}bg-danger{% endif %}">
+                    {{ event.status|capitalize }}
+                </span>
+            </div>
+            <div class="col-md-4">
+                <strong>Volunteer Limit:</strong>
+                {% if event.max_volunteers %}
+                    {{ event.max_volunteers }}
+                {% else %}
+                    Unlimited
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mt-4">
+    <div class="card-header bg-primary text-white">
+        <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Registered Volunteers</h5>
+            <a href="{{ url_for('charity_manage_events') }}" class="btn btn-sm btn-light">Back to Events</a>
+        </div>
+    </div>
+    <div class="card-body">
+        {% if registrations %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Skills</th>
+                            <th>Registration Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for reg in registrations %}
+                            <tr>
+                                <td>{{ reg.volunteer_name }}</td>
+                                <td>{{ reg.email }}</td>
+                                <td>{{ reg.phone }}</td>
+                                <td>
+                                    {% if reg.skills %}
+                                        {{ reg.skills }}
+                                    {% else %}
+                                        <em>None specified</em>
+                                    {% endif %}
+                                </td>
+                                <td>{{ reg.registered_at.strftime('%d %b %Y') }}</td>
+                                <td>
+                                    <span class="badge {% if reg.status == 'approved' %}bg-success{% elif reg.status == 'pending' %}bg-warning{% elif reg.status == 'completed' %}bg-info{% else %}bg-danger{% endif %}">
+                                        {{ reg.status|capitalize }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if reg.status == 'pending' %}
+                                        <div class="btn-group" role="group">
+                                            <form method="post" action="{{ url_for('charity_approve_volunteer', event_id=event.id, registration_id=reg.id) }}">
+                                                <button type="submit" class="btn btn-sm btn-success me-1">Approve</button>
+                                            </form>
+                                            <form method="post" action="{{ url_for('charity_reject_volunteer', event_id=event.id, registration_id=reg.id) }}">
+                                                <button type="submit" class="btn btn-sm btn-danger">Reject</button>
+                                            </form>
+                                        </div>
+                                    {% elif reg.status == 'approved' %}
+                                        <form method="post" action="{{ url_for('charity_reject_volunteer', event_id=event.id, registration_id=reg.id) }}">
+                                            <button type="submit" class="btn btn-sm btn-danger">Remove</button>
+                                        </form>
+                                    {% elif reg.status == 'rejected' %}
+                                        <form method="post" action="{{ url_for('charity_approve_volunteer', event_id=event.id, registration_id=reg.id) }}">
+                                            <button type="submit" class="btn btn-sm btn-success">Approve</button>
+                                        </form>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle me-2"></i> No volunteer applications for this event yet.
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <a href="{{ url_for('charity_manage_events') }}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left me-1"></i> Back to Manage Events
+        </a>
+    </div>
+</div>
+{% endblock %}
